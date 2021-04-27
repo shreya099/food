@@ -41,11 +41,7 @@ if (!isset($_SESSION['is_login']))
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
 
-  <!-- Preloader -->
-  <div class="preloader flex-column justify-content-center align-items-center">
-    <img class="animation__shake" src="dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
-  </div>
-
+ 
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <!-- Left navbar links -->
@@ -54,18 +50,12 @@ if (!isset($_SESSION['is_login']))
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="index3.html" class="nav-link">Home</a>
+        <a href="header.php" class="nav-link">Home</a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="#" class="nav-link">Contact</a>
+        <a href="logout.php" class="nav-link">Logout</a>
       </li>
-       <li class="nav-item d-none d-sm-inline-block">
-       <a href="index3.html" class="brand-link nav-link">
-      <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-      <span class="brand-text font-weight-light">Admin</span>
-    </a>
-</li>
-
+      
     </ul>
 
     
@@ -84,7 +74,7 @@ if (!isset($_SESSION['is_login']))
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         
         <div class="info">
-          <a href="#" class="d-block"><?php echo $_SESSION['name']  ?></a>
+          <a href="#" class="d-block">Welcome  <?php echo $_SESSION['name']  ?>!</a>
         </div>
       </div>
 
@@ -96,7 +86,7 @@ if (!isset($_SESSION['is_login']))
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="header.php" class="nav-link">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 Dashboard
@@ -108,7 +98,7 @@ if (!isset($_SESSION['is_login']))
           
             <li class="nav-item">
             <a href="category.php" class="nav-link">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <i class="nav-icon fas fa-list"></i>
               <p>
                 Category
                
@@ -120,7 +110,7 @@ if (!isset($_SESSION['is_login']))
             
             <li class="nav-item">
             <a href="user.php" class="nav-link">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <i class="nav-icon fas fa-user-alt"></i>
               <p>
                 Users
                
@@ -130,7 +120,7 @@ if (!isset($_SESSION['is_login']))
           </li>
           <li class="nav-item">
             <a href="delivery_boy.php" class="nav-link">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <i class="nav-icon fas fa-truck"></i>
               <p>
                 Delivery Boy
                
@@ -140,7 +130,7 @@ if (!isset($_SESSION['is_login']))
           </li>
           <li class="nav-item">
             <a href="coupon_code.php" class="nav-link">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <i class="nav-icon fas fa-barcode"></i>
               <p>
                  Coupon Code
                
@@ -151,7 +141,7 @@ if (!isset($_SESSION['is_login']))
 
             <li class="nav-item">
             <a href="dish.php" class="nav-link">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <i class="nav-icon fas fa-utensils"></i>
               <p>
                  Dish
                
@@ -164,7 +154,7 @@ if (!isset($_SESSION['is_login']))
           
             <li class="nav-item">
             <a href="logout.php" class="nav-link">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <i class="nav-icon fas fa-sign-out-alt"></i>
               <p>
                 Logout
                

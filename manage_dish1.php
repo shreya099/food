@@ -15,7 +15,14 @@ $d1=$row['dish'];
 $i=$row['image'];
 $dd=$row['dish_detail'];
 }
-$res_category=mysqli_query($conn,"select * from category where status='1' order by category asc")
+if(isset($_GET['dish_detail_id']))
+{
+  $dish_detail_id=get_safe_value($_GET['dish_detail_id']);
+  $id=get_safe_value($_GET['id']);
+  mysqli_query($conn,"delete from dish_detail where id='$dish_detail_id'");
+  redirect('manage_dish1.php?id='.$id);
+}
+$res_category=mysqli_query($conn,"select * from category where status='1' order by category asc");
 ?>
 <html>
   <head>
@@ -37,8 +44,9 @@ $res_category=mysqli_query($conn,"select * from category where status='1' order 
     <style>
   .mt{
     margin-top:8px;
-    </style>
   }
+    </style>
+  
   </head>
   <!-- Main content -->
   <body>
@@ -97,24 +105,33 @@ $res_category=mysqli_query($conn,"select * from category where status='1' order 
                         <input type="file" name="image" class="form-control" placeholder="dish image">
                       </div>
                       <div class="form-group" id="dish_box1">
-                        
-                        <div class="row">
+                        <label>Dish Attributes</label>
+                        <?php 
+                        $dish_detail_res=mysqli_query($conn,"select * from dish_detail where dish_id='$id'");
+                        $i1=1;
+                        while($dish_detail_row=mysqli_fetch_assoc($dish_detail_res)){?>
+                        <div class="row mt">
                           <div class="col-md-5">
-                             <input type="text" name="attribute[]" class="form-control" placeholder="Enter Attributes">
+                            <input type="hidden" name="dish_detail_id" class="form-control" value="<?php echo $dish_detail_row['id'] ?>">
+                             <input type="text" name="attribute[]" class="form-control" value="<?php echo $dish_detail_row['attributes']?>">
                           </div>
                           <div class="col-md-5">
-                             <input type="text" name="price[]" class="form-control" placeholder="Enter Price">
+                             <input type="text" name="price[]" class="form-control" value="<?php echo $dish_detail_row['price'] ?>">
                           </div>
-                          <div class="col-md-2">
-                           
-                        </div>
+                          
+                           <?php if($i1!=1){ ?>
+                            <div class="col-md-2"><button type="button" class="btn btn-dark" onclick="remove_more_new('<?php echo $dish_detail_row['id'] ?>')">Remove</button></div>
+
+                          <?php }?>
                       </div>
-                      
-                    </div>
+                      <?php $i1++; }  
+
+                      ?>
+                    </div> 
                     <!-- /.card-body -->
                     <div class="card-footer">
                       <button type="submit" class="btn btn-primary" name="update">Update</button>
-                       <button type="button" class="btn btn-success" onclick="add_more()">Add more</button>
+                      <button type="button" class="btn btn-success" onclick="add_more()">Add more</button> 
                     </div>
                   </form>
                 </div>
@@ -154,6 +171,36 @@ $res_category=mysqli_query($conn,"select * from category where status='1' order 
         <!-- AdminLTE for demo purposes -->
         <script src="dist/js/demo.js"></script>
         <!-- Page specific script -->
+        <!-- jQuery -->
+<script src="plugins/jquery/jquery.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="plugins/jquery-ui/jquery-ui.min.js"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+  $.widget.bridge('uibutton', $.ui.button)
+</script>
+<!-- Bootstrap 4 -->
+<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- ChartJS -->
+<script src="plugins/chart.js/Chart.min.js"></script>
+<!-- Sparkline -->
+<script src="plugins/sparklines/sparkline.js"></script>
+<!-- JQVMap -->
+<script src="plugins/jqvmap/jquery.vmap.min.js"></script>
+<script src="plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
+<!-- jQuery Knob Chart -->
+<script src="plugins/jquery-knob/jquery.knob.min.js"></script>
+<!-- daterangepicker -->
+<script src="plugins/moment/moment.min.js"></script>
+<script src="plugins/daterangepicker/daterangepicker.js"></script>
+<!-- Tempusdominus Bootstrap 4 -->
+<script src="plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+<!-- Summernote -->
+<script src="plugins/summernote/summernote-bs4.min.js"></script>
+<!-- overlayScrollbars -->
+<script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+<!-- AdminLTE App -->
+<script src="dist/js/adminlte.js"></script>
         <script>
         $(function () {
         $("#example1").DataTable({
@@ -171,37 +218,52 @@ $res_category=mysqli_query($conn,"select * from category where status='1' order 
         });
         });
         </script>
+
         <?php
         if(isset($_POST['update']))
-        { prx($_POST);
+        {
+          //prx($_POST);
          $msg="";
-        $id1=get_safe_value($_POST['category_id']);
-        $dish=get_safe_value($_POST['dish']);
-        $dish_d=get_safe_value($_POST['dish_detail']);
+        echo $id1=get_safe_value($_POST['category_id']);
+        echo $dish=get_safe_value($_POST['dish']);
+        echo $dish_d=get_safe_value($_POST['dish_detail']);
         $added_on=Date('y-m-d h:i:s');
         
-        if(mysqli_num_rows(mysqli_query($conn,"SELECT * from dish where dish='$dish' && id!='$id'"))>0)
-        echo "<script>swal( 'Dish already exists','Dish exists!','error' ).then(function() { window. location = 'dish.php'; });;</script>";
-        else
-        {
-        $image_ok='';
-        $image=$_FILES['image']['name'];
+         if(mysqli_num_rows(mysqli_query($conn,"SELECT * from dish where dish='$dish' && id!='$id'"))>0)
+         echo "<script>swal( 'Dish already exists','Dish exists!','error' ).then(function() { window. location = 'dish.php'; });;</script>";
+         else
+         {
+        // $image_ok='';
+         $image=$_FILES['image']['name'];
         if($_FILES['image']['tmp_name']!='')
-        {
+         {
         //$image=$_FILES['image']['name'];
-        move_uploaded_file($_FILES['image']['tmp_name'],SERVER_DISH_IMAGE.$_FILES['image']['name']);
-        //$image_ok=", image='$image'";
+         move_uploaded_file($_FILES['image']['tmp_name'],SERVER_DISH_IMAGE.$_FILES['image']['name']);
+        // //$image_ok=", image='$image'";
         $sql="UPDATE dish set category_id='$id1',dish='$dish',dish_detail='$dish_d',image='$image' where id='$id'";
-        }
-        else
+         }
+         else
         $sql="UPDATE dish set category_id='$id1',dish='$dish',dish_detail='$dish_d' where id='$id'";
-        mysqli_query($conn,$sql);
-        redirect('dish.php');
-        }
+         mysqli_query($conn,$sql);
+           $attribute_arr=$_POST['attribute'];
+         $price_arr=$_POST['price'];
+         $dish_d_id_arr=$_POST['dish_detail_id'];
+         foreach($attribute_arr as $key=>$val){
+           $attribute=$val;
+           $price=$price_arr[$key];
+           if(isset($dish_d_id_arr[$key]))
+           { $did=$dish_d_id_arr[$key];
+             mysqli_query($conn,"update dish_detail set attributes='$attribute',price='$price'where id='$did'"); 
+           }
+           else{
+           mysqli_query($conn,"insert into dish_detail(dish_id,attributes,price,status)values('$id','$attribute',$price,1)");}
+         }
+        // redirect('dish.php');
+         }
         
         }
         ?>
- <input type="hidden" id="add_more" value="1">
+   <input type="hidden" id="add_more" value="1">
         <script>
        function add_more(){
         var add_more=jQuery('#add_more').val();
@@ -212,6 +274,13 @@ $res_category=mysqli_query($conn,"select * from category where status='1' order 
        }
        function remove_more(id){
        jQuery('#id'+id).remove();
+       }
+       function remove_more_new(id){
+        var res=confirm('Are you Sure?');
+        if(res==true){
+          var path=window.location.href;
+          window.location.href=path+"&dish_detail_id="+id;
+        }
        }
         </script>
       </body>

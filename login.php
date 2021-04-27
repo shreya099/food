@@ -1,24 +1,4 @@
-<?php
-session_start();
-include 'database.php';
-include 'fun.php';
-if (isset($_POST['submit'])) {
-	# code...
-	 $u=get_safe_value($_POST['username']);
-	 $p=get_safe_value($_POST['password']);
-	 $q="SELECT * from admin where username='$u' && password='$p'";
-	 $res=mysqli_query($conn,$q);
-	 if(mysqli_num_rows($res)>0)
-	 {
-        $row=mysqli_fetch_assoc($res);
-        $_SESSION['is_login']='yes';
-        $_SESSION['name']=$row['name'];
-        redirect('index.php');
-	 }
-	 else
-	 	$msg= "Please enter valid login details";
-}
-?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -35,6 +15,9 @@ if (isset($_POST['submit'])) {
   <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
+   
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
 </head>
 <body class="hold-transition login-page">
 <div class="login-box">
@@ -43,6 +26,7 @@ if (isset($_POST['submit'])) {
   </div>
   <!-- /.login-logo -->
   <div class="card">
+    <img src="https://image.freepik.com/free-vector/fast-food-advertising-composition_1284-17372.jpg" height="348px">
     <div class="card-body login-card-body">
       <p class="login-box-msg">Log in</p>
 
@@ -83,6 +67,27 @@ if (isset($_POST['submit'])) {
   </div>
 </div>
 <!-- /.login-box -->
+<?php
+session_start();
+include 'database.php';
+include 'fun.php';
+if (isset($_POST['submit'])) {
+  # code...
+   $u=get_safe_value($_POST['username']);
+   $p=get_safe_value($_POST['password']);
+   $q="SELECT * from admin where username='$u' && password='$p'";
+   $res=mysqli_query($conn,$q);
+   if(mysqli_num_rows($res)>0)
+   {
+        $row=mysqli_fetch_assoc($res);
+        $_SESSION['is_login']='yes';
+        $_SESSION['name']=$row['name'];
+        redirect('index.php');
+   }
+   else
+  echo "<script>swal( 'Invalid login details!','Invalid!','error' ).then(function() { window. location = 'login.php'; });;</script>";
+}
+?>
 
 <!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>
